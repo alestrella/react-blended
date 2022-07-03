@@ -1,16 +1,18 @@
+import { Section } from './Section/Section';
+import { FeaturesList } from './FeaturesList/FeaturesList';
+import { TeamList } from './TeamList/TeamList';
+import featuresData from '../data/features.json';
+import teamMembers from '../data/teamMembers.json';
+
 export const App = () => {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101',
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <Section>
+        <FeaturesList data={featuresData} />
+      </Section>
+      <Section title="Наша команда">
+        <TeamList teamMembers={teamMembers} />
+      </Section>
+    </>
   );
 };
