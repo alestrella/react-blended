@@ -1,16 +1,42 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import AddForm from './AddForm/AddForm';
-import Home from './Home/Home';
-import Layout from './Layout/Layout';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers } from 'redux/userOperations';
+import { getLoadingStatus, getUsers } from 'redux/userSelectors';
+import { AddUserForm } from './AddUserForm/AddUserForm';
+import { Button } from './Button/Button';
+import { UserList } from './UserList/UserList';
 
 export const App = () => {
+  const [openForm, setOpenForm] = useState(false);
+  const dispatch = useDispatch();
+
+  const users = useSelector(getUsers);
+  const loading = useSelector(getLoadingStatus);
+
+  const handleUsers = () => {
+    dispatch(fetchUsers());
+  };
+
+  const handleOpenForm = () => {
+    setOpenForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="add" element={<AddForm />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Route>
-    </Routes>
+    <>
+      {users.length > 0 ? (
+        <>
+          <UserList />
+          <Button text="Add user" handleClick={handleOpenForm} />
+        </>
+      ) : (
+        <Button text="Fetch Users" handleClick={handleUsers} />
+      )}
+      {openForm && <AddUserForm closeForm={handleCloseForm} />}
+      {loading && <p>Loading...</p>}
+    </>
   );
 };
